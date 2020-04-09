@@ -220,9 +220,8 @@ class BST(BinaryTree):
             c = node.right
             while c.left:
                 c = c.left
-
-            c = BST._remove(node.right, c.value)
-
+            node.value = c.value
+            node.right = BST._remove(node.right, node.value)
         return node
 
     def remove_list(self, xs):
