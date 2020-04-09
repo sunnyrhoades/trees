@@ -217,10 +217,11 @@ class BST(BinaryTree):
             if not node.left:
                 return node.right
             
-            while node.right.left:
-                node.right = node.right.left
+            c = node.right
+            while c.left:
+                c = c.left
 
-            node.right = BST._remove(node.right, node.right.value)
+            c = BST._remove(node.right, c.value)
 
         return node
 
