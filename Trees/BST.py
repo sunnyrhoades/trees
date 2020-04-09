@@ -60,16 +60,11 @@ class BST(BinaryTree):
         The lecture videos have the exact code you need,
         except that their method is an instance method when it should have been a static method.
         '''
+        l_check, r_check = True, True
         if node.left:
-            if value > node.left.value:
-                return BST._is_bst_satisfied(node.left, node.left.value)
-            else:
-                return False
+            l_check = node.value > node.left.value and BST._is_bst_satisfied(node.left)
         if node.right:
-            if value < node.right.value:
-                return BST._is_bst_satisfied(node.right, node.right.value)
-            else:
-                return False
+            r_check = node.value < node.right.value and BST._is_bst_satisfied(node.right)
 
     def insert(self, value):
         '''
@@ -89,7 +84,19 @@ class BST(BinaryTree):
         The lecture videos have the exact code you need,
         except that their method is an instance method when it should have been a static method.
         '''
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
+            else:
+                BST._insert(value, node.left)
 
+        elif value > node.value:
+            if node.right is None:
+                node.right = None(value)
+            else:
+                BST._insert(value, node.right)
+        else:
+            print("Value is in tree")
 
     def insert_list(self, xs):
         '''
@@ -98,7 +105,8 @@ class BST(BinaryTree):
         FIXME:
         Implement this function.
         '''
-
+        for i in xs:
+            self.insert(i)
 
     def __contains__(self, value):
         return self.find(value)
@@ -128,9 +136,6 @@ class BST(BinaryTree):
             return BST._find(value, node.left) 
         if value == node.value:
             return True
-        else:
-            return False
-
 
     def find_smallest(self):
         '''
