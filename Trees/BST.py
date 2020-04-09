@@ -60,11 +60,13 @@ class BST(BinaryTree):
         The lecture videos have the exact code you need,
         except that their method is an instance method when it should have been a static method.
         '''
-        l_check, r_check = True, True
+        l_check = True 
+        r_check = True
         if node.left:
             l_check = node.value > node.left.value and BST._is_bst_satisfied(node.left)
         if node.right:
             r_check = node.value < node.right.value and BST._is_bst_satisfied(node.right)
+        return l_check and r_check
 
     def insert(self, value):
         '''
@@ -96,7 +98,7 @@ class BST(BinaryTree):
             else:
                 BST._insert(value, node.right)
         else:
-            print("Value is in tree")
+            print("Value is already within tree")
 
     def insert_list(self, xs):
         '''
@@ -136,6 +138,8 @@ class BST(BinaryTree):
             return BST._find(value, node.left) 
         if value == node.value:
             return True
+        else:
+            return False
 
     def find_smallest(self):
         '''
@@ -151,8 +155,7 @@ class BST(BinaryTree):
         similar to how the insert and find functions have recursive helpers.
         '''
         node = self.root
-        if node:
-            return BST-_find_smallest(node)
+        return BST._find_smallest(node)
 
     @staticmethod
     def _find_smallest(node):
@@ -170,6 +173,9 @@ class BST(BinaryTree):
         This function is not implemented in the lecture notes,
         but if you understand the structure of a BST it should be easy to implement.
         '''
+        node = self.root
+        return BST._find_largest(node) 
+
     @staticmethod
     def _find_largest(node):
         if node.right:

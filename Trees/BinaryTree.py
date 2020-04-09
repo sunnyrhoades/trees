@@ -150,8 +150,8 @@ class BinaryTree():
         Implement this function by modifying the _print functions above.
         '''
         if start:
-            traversal.append(start.value)
             traversal = self.inorder(start.left, traversal)
+            traversal.append(start.value)
             traversal = self.inorder(start.right, traversal)
         return traversal
 
@@ -161,9 +161,9 @@ class BinaryTree():
         Implement this function by modifying the _print functions above.
         '''
         if start:
-            traversal.append(start.value)
             traversal = self.postorder(start.left, traversal)
             traversal = self.postorder(start.right, traversal)
+            traversal.append(start.value)
         return traversal
 
     def __len__(self):
