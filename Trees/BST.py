@@ -119,7 +119,7 @@ class BST(BinaryTree):
         Returns whether value is contained in the BST.
         '''
         if self.root:
-            return BST._find(value, self.root):
+            return BST._find(value, self.root)
         else:
             return False
 
