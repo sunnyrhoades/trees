@@ -5,7 +5,7 @@ The functions in this file are considerably harder than the functions in the Bin
 
 from Trees.BinaryTree import BinaryTree, Node
 
-class BST():
+class BST(BinaryTree):
     '''
     FIXME:
     BST is currently not a subclass of BinaryTree.
@@ -19,7 +19,9 @@ class BST():
         If xs is a list (i.e. xs is not None),
         then each element of xs needs to be inserted into the BST.
         '''
-
+        self.root = None
+        if xs:
+            self.insert_list(xs)
 
     def __repr__(self):
         '''
@@ -98,8 +100,7 @@ class BST():
         Returns whether value is contained in the BST.
         '''
         if self.root:
-            if BST._find(value, self.root):
-                return True
+            return BST._find(value, self.root):
         else:
             return False
 
@@ -112,6 +113,14 @@ class BST():
         The lecture videos have the exact code you need,
         except that their method is an instance method when it should have been a static method.
         '''
+        if value > node.value and node.right: 
+            return BST._find(value, node.right)
+        elif value < node.value and node.left:
+            return BST._find(value, node.left) 
+        if value == node.value:
+            return True
+        else:
+            return False
 
 
     def find_smallest(self):
@@ -127,7 +136,6 @@ class BST():
         Create a recursive staticmethod helper function,
         similar to how the insert and find functions have recursive helpers.
         '''
-
 
     def find_largest(self):
         '''
