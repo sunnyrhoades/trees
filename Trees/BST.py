@@ -151,7 +151,8 @@ class BST(BinaryTree):
         similar to how the insert and find functions have recursive helpers.
         '''
         node = self.root
-        return BST-_find_smallest(node)
+        if node:
+            return BST-_find_smallest(node)
 
     @staticmethod
     def _find_smallest(node):
@@ -169,7 +170,12 @@ class BST(BinaryTree):
         This function is not implemented in the lecture notes,
         but if you understand the structure of a BST it should be easy to implement.
         '''
-
+    @staticmethod
+    def _find_largest(node):
+        if node.right:
+            return BST._find_largest(node.right) 
+        else:
+            return node.value
 
     def remove(self,value):
         '''
@@ -189,7 +195,28 @@ class BST(BinaryTree):
         Use a recursive helper function.
         '''
         self.root = BST._remove(self.root,value)
+    
+    @staticmethod
+    def _remove(node, value):
+        if not node:
+            return node
 
+        if node.value < value:
+            node.right = BST._remove(node.right, value)
+        elif node.value > value:
+            node.left = BST._remove(node.left, value)
+        else:
+            if not node.right:
+                return node.left
+            if not node.left:
+                return node.right
+            
+            while node.right.left:
+                node.right = node.right.left
+
+            node.right = BST._remove(node.right, node.right.value)
+
+        return node
 
     def remove_list(self, xs):
         '''
@@ -198,3 +225,5 @@ class BST(BinaryTree):
         FIXME:
         Implement this function.
         '''
+        for i in xs:
+            self.remove(i)
