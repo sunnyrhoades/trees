@@ -94,7 +94,7 @@ class BST(BinaryTree):
 
         elif value > node.value:
             if node.right is None:
-                node.right = None(value)
+                node.right = Node(value)
             else:
                 BST._insert(value, node.right)
         else:
