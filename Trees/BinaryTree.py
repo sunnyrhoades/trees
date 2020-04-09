@@ -80,13 +80,23 @@ class BinaryTree():
         Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
-        
+        if start:
+            traversal += (str(start.value) + "-")
+            traversal = self.preorder_print(start.left, traversal)
+            traversal = self.preorder_print(start.left, traversal)
+        return traversal
+
     def inorder_print(self, start, traversal):
         '''
         FIXME: 
         Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
+        if start:
+            traversal = self.inorder_print(start.left, traversal)
+            traversal += (str(start.value) + "-")
+            traversal = self.inorder_print(start.right, traversal)
+        return traversal
 
     def postorder_print(self, start, traversal):
         '''
@@ -128,18 +138,33 @@ class BinaryTree():
         FIXME:
         Implement this function by modifying the _print functions above.
         '''
+        if start:
+            traversal.append(start.value)
+            traversal = self.preorder(start.left, traversal)
+            traversal = self.preorder(start.right, traversal)
+        return traversal
 
     def inorder(self, start, traversal):
         '''
         FIXME:
         Implement this function by modifying the _print functions above.
         '''
+        if start:
+            traversal.append(start.value)
+            traversal = self.inorder(start.left, traversal)
+            traversal = self.inorder(start.right, traversal)
+        return traversal
 
     def postorder(self, start, traversal):
         '''
         FIXME:
         Implement this function by modifying the _print functions above.
         '''
+        if start:
+            traversal.append(start.value)
+            traversal = self.postorder(start.left, traversal)
+            traversal = self.postorder(start.right, traversal)
+        return traversal
 
     def __len__(self):
         '''
@@ -200,7 +225,7 @@ class BinaryTree():
         '''
         if node is None:
             return -1
-        l_height = BinaryTree._height(node)
-        r_height = node.right._height()
+        l_height = BinaryTree._height(node.left)
+        r_height = BinaryTree._height(node.right)
 
         return 1 + max(l_height, r_height)
