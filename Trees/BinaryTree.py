@@ -83,7 +83,7 @@ class BinaryTree():
         if start:
             traversal += (str(start.value) + "-")
             traversal = self.preorder_print(start.left, traversal)
-            traversal = self.preorder_print(start.left, traversal)
+            traversal = self.preorder_print(start.right, traversal)
         return traversal
 
     def inorder_print(self, start, traversal):
@@ -107,7 +107,7 @@ class BinaryTree():
         if start:
             traversal = self.postorder_print(start.left, traversal)
             traversal = self.postorder_print(start.right, traversal)
-            travresal += (str(start.value) + "-")
+            traversal += (str(start.value) + "-")
         return traversal
         
     def to_list(self, traversal_type):
