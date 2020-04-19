@@ -78,10 +78,16 @@ class AVLTree(BST):
         The textbook's class hierarchy for their AVL tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
-        t = node.right
-        node.right = t.left
-        t.left = node
-        return t
+        if node is None:
+            return node
+        elif node.right is None:
+            return node
+        
+        newRoot = Node(node.right.value)
+        newRoot.right = node.right.right
+        newRoot.left = Node(node.value)
+        newRoot.left.left = node.left
+        newRoot.left.right = node.right.left
 
     @staticmethod
     def _right_rotate(node):
@@ -94,10 +100,16 @@ class AVLTree(BST):
         The textbook's class hierarchy for their AVL tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
-        t = node.left
-        node.left = t.right
-        t.right = node
-        return t
+        if node is None:
+            return node
+        elif node.left is None:
+            return node
+
+        newRoot = Node(node.left.value)
+        newRoot.left = node.left.left
+        newRoot.right = Node(node.value)
+        newRoot.right.left = node.left.right
+        newRoot.right.right = node.right
     
     @staticmethod
     def _insert(value, node):
