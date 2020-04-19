@@ -102,24 +102,17 @@ class AVLTree(BST):
     @staticmethod
     def _insert(value, node):
         if value < node.value:
-            if node.left is  None:
-               node.left = Node(value)
+            if node.left is None:
+                node.left = Node(value)
             else:
                 AVLTree._insert(value, node.left)
         elif value > node.value:
             if node.right is None:
                 node.right = Node(value)
-            else:
+            else: 
                 AVLTree._insert(value, node.right)
-        else:
-            print("Value is already in tree.")
-
         if AVLTree._is_avl_satisfied(node) == False:
-            node.left = AVLTree.rebalance(node.left)
-            node.right = AVLTree.rebalance(node.right)
             return AVLTree.rebalance(node)
-        else:
-            return node
 
     def insert(self, value):
         '''
