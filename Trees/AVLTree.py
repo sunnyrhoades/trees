@@ -24,10 +24,6 @@ class AVLTree(BST):
         if xs:
             self.insert_list(xs)
    
-    def insert_list(self, xs):
-        for x in xs:
-            self.insert(x)
-
     def balance_factor(self):
         '''
         Returns the balance factor of a tree.
@@ -56,16 +52,9 @@ class AVLTree(BST):
         FIXME:
         Implement this function.
         '''
-        if AVLTree._balance_factor(node) not in [-1, 0, 1]:
-            return False
-        if node:
-            if node.left and node.right:
-                return AVLTree._is_avl_satisfied(node.left) and AVLTree._is_avl_satisfied(node.right)
-            if node.left and node.right is None:
-                return AVLTree._is_avl_satisfied(node.left)
-            if node.right and node.left is None:
-                return AVLTree._is_avl_satisfied(node.right)
-        return True
+        if node is None:
+            return True
+        return AVLTree._balance_factor(node) in [-1,0,1] and AVLTree._is_avl_satisfied(node.right) and AVLTree._is_avl_satisfied(node.left)
 
     @staticmethod
     def _left_rotate(node):
@@ -78,13 +67,12 @@ class AVLTree(BST):
         The textbook's class hierarchy for their AVL tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
-        if node is None:
-            return node
-        elif node.right is None:
+        if node is None or  node.right is None:
             return node
         
         newRoot = Node(node.right.value)
         newRoot.right = node.right.right
+
         newRoot.left = Node(node.value)
         newRoot.left.left = node.left
         newRoot.left.right = node.right.left
@@ -100,9 +88,7 @@ class AVLTree(BST):
         The textbook's class hierarchy for their AVL tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
-        if node is None:
-            return node
-        elif node.left is None:
+        if node is None or node.left is None:
             return node
 
         newRoot = Node(node.left.value)
@@ -123,8 +109,15 @@ class AVLTree(BST):
                 node.right = Node(value)
             else: 
                 AVLTree._insert(value, node.right)
+        else: 
+            print("Value already in tree.")
+
         if AVLTree._is_avl_satisfied(node) == False:
+            node.left = AVLTree.rebalance(node.left)
+            node.right = AVLTree.rebalance(node.right)
             return AVLTree.rebalance(node)
+        else:
+            return node
 
     def insert(self, value):
         '''
@@ -145,7 +138,11 @@ class AVLTree(BST):
             self.root = Node(value)
         else:
             self.root = AVLTree._insert(value, self.root)
-
+        
+        def insert_list(self, xs):
+            for x in xs:
+                self.insert(x)
+    
     @staticmethod
     def rebalance(node):
         while AVLTree._balance_factor(node) < -1 or AVLTree._balance_factor(node) > 1:
@@ -159,3 +156,36 @@ class AVLTree(BST):
                 return AVLTree._left_rotate(node)
             else:
                 return node
+
+    def remove(self, value):
+        self.root = AVLTree._remove(self.root, value)
+    
+    @staticmethod
+    def _remove(node, value):
+        if not node:
+            return node
+        if node.value > value:
+            node.left = AVLTree._remove(node.left, value)
+        elif node.value < value:
+            node.right = AVLTree._remove(node.right, value)
+        else:
+            if not node.right:
+                return node.left
+            if not node.left:
+                return node.right
+            t = node.right
+            while t.left: 
+                t = t.left
+            node.value = t.value
+            node.right = AVLTree._remove(node.right, node.value)
+
+        if AVLTree._is_avl_satisfied(node) == False:
+            node.left = AVLTree.rebalance(node.left)
+            node.right = AVLTree.rebalance(node.right)
+            return AVLTree.rebalance(node)
+        else: 
+            return node 
+
+    def remove_list(self, xs):
+        for x in xs:
+            self.remove(xs)
