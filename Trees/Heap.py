@@ -102,7 +102,7 @@ class Heap(BST):
         return node
     
     @staticmethod
-    def size(node);
+    def size(node):
         if node is none:
             return 0 
         stack = []
