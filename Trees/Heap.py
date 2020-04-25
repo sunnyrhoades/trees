@@ -141,8 +141,8 @@ class Heap(BST):
         Create a recursive staticmethod helper function,
         similar to how the insert and find functions have recursive helpers.
         '''
-        if heap is statisf(self)
-        return self.root.val
+        if Heap._is_heap_satisfied(self):
+            return self.root.value
 
     def remove_min(self):
         '''
