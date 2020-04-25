@@ -5,7 +5,7 @@ The functions in this file are considerably harder than the functions in the Bin
 
 from Trees.BinaryTree import BinaryTree, Node
 
-class BST():
+class BST(BinaryTree):
     '''
     FIXME:
     BST is currently not a subclass of BinaryTree.
@@ -19,7 +19,9 @@ class BST():
         If xs is a list (i.e. xs is not None),
         then each element of xs needs to be inserted into the BST.
         '''
-
+        self.root = None
+        if xs:
+            self.insert_list(xs)
 
     def __repr__(self):
         '''
@@ -36,7 +38,6 @@ class BST():
         and that they won't have to reimplement it.
         '''
         return type(self).__name__+'('+str(self.to_list('inorder'))+')'
-
 
     def is_bst_satisfied(self):
         '''
