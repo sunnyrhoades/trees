@@ -3,7 +3,7 @@
 
 from Trees.BinaryTree import BinaryTree, Node
 
-class Heap(BST):
+class Heap(BinaryTree):
     '''
     FIXME:
     Heap is currently not a subclass of BinaryTree.
@@ -17,9 +17,10 @@ class Heap(BST):
         If xs is a list (i.e. xs is not None),
         then each element of xs needs to be inserted into the Heap.
         '''
-        super(Heap, self).__init__()
-        for x in xs:
-            self.insert(x)
+        super().__init__()
+        if xs:
+            for x in xs:
+                self.insert(x)
 
     def __repr__(self):
         '''
@@ -58,13 +59,19 @@ class Heap(BST):
         The lecture videos have the exact code you need,
         except that their method is an instance method when it should have been a static method.
         '''
-        if node is None or (node.left is None and node.right is None):
+        left = True
+        right = True
+        if node is None:
             return True
-        if node.right is None:
-            return node.value <= node.left.value
-        if node.value <= node.left.value and node.value <= node.right.value:
-            return Heap._is_heap_satisfied(node.left) and Heap._is_heap_satisfied(node.right)
-
+        if node.left:
+            left = node.value <= node.left.value and Heap._is_heap_satisfied(node.left)
+        if node.right:
+            right = node.value <= node.right.value and Heap._is_heap_satisfied(node.right)
+        if left and right:
+            return True
+        else:
+            return False
+        
     def insert(self, value):
         '''
         Inserts value into the heap.
@@ -102,11 +109,11 @@ class Heap(BST):
         return node
     
     @staticmethod
-    def size(node):
-        if node is none:
+    def size(self):
+        if self.root is None:
             return 0 
         stack = []
-        stack.append(node)
+        stack.append(self.root)
         size = 1
         while stack:
             node = stack.pop()
@@ -126,7 +133,7 @@ class Heap(BST):
         Implement this function.
         '''
         for x in xs:
-            self.insert(xs)
+            self.insert(x)
 
     def find_smallest(self):
         '''
@@ -141,8 +148,14 @@ class Heap(BST):
         Create a recursive staticmethod helper function,
         similar to how the insert and find functions have recursive helpers.
         '''
-        if Heap._is_heap_satisfied(self):
-            return self.root.value
+        return Heap._find_smallest(self.root)
+    
+    @staticmethod
+    def _find_smallest(node):
+        if node is None:
+            return
+        else:
+            return node.value
 
     def remove_min(self):
         '''
