@@ -103,11 +103,6 @@ class Heap(BinaryTree):
                 n = node.right
             n = Heap._insert(value, n)
 
-        if node.value > n.value:
-            fn = n.value
-            node.value = fn
-        return node
-    
     @staticmethod
     def size(self):
         if self.root is None:
