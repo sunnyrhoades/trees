@@ -71,6 +71,33 @@ class Heap(BinaryTree):
             return True
         else:
             return False
+
+    @staticmethod
+    def swap(n1, n2):
+        temp = n2.value
+        n2.value = n1.value
+        n1.value = temp
+
+    @staticmethod
+    def _bubble_down(node):
+        if node:
+            if node.left and node.right is None:
+                if node.left.value < node.value:
+                    Heap.swap(node, node.left)
+                node = node.left
+            elif node.left and node.right:
+                mn = min(node.left.value, node.right.value)
+                if mn == node.left.value:
+                    if mn < node.value:
+                        Heap.swap(node, node.left)
+                    node = node.left
+                else:
+                    if mn < node.value:
+                        Heap.swap(node, node.right)
+                    node = node.right
+            else:
+                return
+            return Heap._bubble_down(node)
         
     def insert(self, value):
         '''
@@ -83,25 +110,64 @@ class Heap(BinaryTree):
             Heap._insert(value, self.root)
 
     @staticmethod
-    def _insert(value, node):
+    def _insert(value, node, size):
         '''
         FIXME:
         Implement this function.
         '''
-        if node.left is None:
-            n = Node(value)
-            node.left = n
-        elif node.right is None:
-            n = Node(value)
-            node.right = n
-        else: 
-            left_size = Heap.size(node.left)
-            right_size = Heap.size(node.right)
-            if left_size <= right_size:
-                n = node.left
+        if node is None:
+            node.value = value
+        else:
+            bin_size = str(bin(size + 1))
+            for num in bin_size[3:-1]:
+                if num == '0':
+                    node  = node.left
+                if num == '1':
+                    node = node.right
+            if bin_size[-1] == '0':
+                node.left = Node(value)
             else:
-                n = node.right
-            n = Heap._insert(value, n)
+                node.right = Node(value)
+            if not Heap._is_heap_satisfied(node):
+                bin_size = bin_size[2:]
+                Heap._bubble_up(bin_size, node)
+
+    @staticmethod 
+    def _bubble_up(bin_size, node):
+        start = node
+        if len(bin_size) == 2:
+            if bin_size[-1] == '0':
+                if node.value > node.left.value:
+                    Heap.swap(node, node.left)
+            else:
+                if node.value > node.right.value:
+                    Heap.swap(node, node.right)
+        else:
+            stack = []
+            for num in bin_size[1:-1]:
+                if num == '0':
+                    stack.append(node.left)
+                    node = node.left
+                if num == '1':
+                    stack.append(node.right)
+                    node = node.right
+            while len(stack) > 0:
+                node = stack.pop()
+                stack.append(node)
+                if node.value > node.left.value
+                    stack.pop()
+                    Heap.swap(node, node.left)
+                    stack.append(node)
+                elif node.right and node.value > node.right.value:
+                    stack.pop()
+                    Heap.swap(node, node.right)
+                    stack.append(node)
+                else:
+                    stack.pop()
+        if start.left and start.value > start.left.value:
+            Heap.swap(start, start.left)
+        elif start.right and start.value > start.right.value:
+            Heap.swap(start, start.right)
 
     @staticmethod
     def size(self):
@@ -151,7 +217,7 @@ class Heap(BinaryTree):
             return
         else:
             return node.value
-
+    
     def remove_min(self):
         '''
         Removes the minimum value from the Heap. 
@@ -160,3 +226,38 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
+        if self.root is None:
+            return
+        elif self.size() == 1:
+            self.root = None
+        else:
+            Heap._remove_min(self.root, self.size())
+            Heap._bubble_down(self.root)
+    
+    @staticmethod
+    def _remove_min(node, size):
+        bin_size = str(bin(size))
+        bin_size = bin_size[2:]
+        if len(bin_size) == 2:
+            if bin_size[-1] == '0':
+                replace = node.left
+                Heap.swap(node, replace)
+                node.left = None
+            else:
+                replace = node.right
+                Heap.swap(node, replace)
+                node.right = None
+        else:
+            for num in bin_size[1:-1]:
+                if num == '0':
+                    node = node.left
+                if num == '1':
+                    node = node.right
+            if bin_size[-1] == '0':
+                replace = node.left
+                Heap.swap(node, replace)
+                node.left = Node
+            else:
+                replace = node.right
+                Heap.swap(node, replace)
+                node.right = None
