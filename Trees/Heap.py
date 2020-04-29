@@ -154,7 +154,7 @@ class Heap(BinaryTree):
             while len(stack) > 0:
                 node = stack.pop()
                 stack.append(node)
-                if node.value > node.left.value
+                if node.value > node.left.value:
                     stack.pop()
                     Heap.swap(node, node.left)
                     stack.append(node)
