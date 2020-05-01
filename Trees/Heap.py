@@ -206,31 +206,3 @@ class Heap(BinaryTree):
         self.root.value = Heap._remove_last_element(self.root)
         if not Heap._is_heap_satisfied(self.root):
             Heap._swap(self.root)
-
-    @staticmethod
-    def _remove_min(node, size):
-        bin_size = str(bin(size))
-        bin_size = bin_size[2:]
-        if len(bin_size) == 2:
-            if bin_size[-1] == '0':
-                replace = node.left
-                Heap.swap(node, replace)
-                node.left = None
-            else:
-                replace = node.right
-                Heap.swap(node, replace)
-                node.right = None
-        else:
-            for num in bin_size[1:-1]:
-                if num == '0':
-                    node = node.left
-                if num == '1':
-                    node = node.right
-            if bin_size[-1] == '0':
-                replace = node.left
-                Heap.swap(node, replace)
-                node.left = Node
-            else:
-                replace = node.right
-                Heap.swap(node, replace)
-                node.right = None
