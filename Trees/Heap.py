@@ -106,7 +106,7 @@ class Heap(BinaryTree):
             Heap._insert(value, self.root)
 
     @staticmethod
-    def _insert(value, node, size):
+    def _insert(value, node):
         '''
         FIXME:
         Implement this function.
