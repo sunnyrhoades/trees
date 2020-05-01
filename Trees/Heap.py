@@ -79,26 +79,22 @@ class Heap(BinaryTree):
         n1.value = temp
 
     @staticmethod
-    def _bubble_down(node):
-        if node:
-            if node.left and node.right is None:
-                if node.left.value < node.value:
-                    Heap.swap(node, node.left)
-                node = node.left
-            elif node.left and node.right:
-                mn = min(node.left.value, node.right.value)
-                if mn == node.left.value:
-                    if mn < node.value:
-                        Heap.swap(node, node.left)
-                    node = node.left
-                else:
-                    if mn < node.value:
-                        Heap.swap(node, node.right)
-                    node = node.right
+    def _swap(node):
+        if node.left is None and node.right is None:
+            return node
+        elif node.right is None:
+            node.value, node.left.value = node.left.value, node.value
+            return node
+        else:
+            if node.left.value < node.right.value:
+                node.value, node.left.value = node.left.value, node.value
+                if not Heap._is_heap_satisfied(node.left):
+                    Heap._swap(node.left)
             else:
-                return
-            return Heap._bubble_down(node)
-        
+                node.value, node.right.value = node.right.value, node.value
+                if not Heap._is_heap_satisfied(node.right):
+                    Heap._swap(node.right)
+
     def insert(self, value):
         '''
         Inserts value into the heap.
@@ -115,60 +111,25 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
-        if node is None:
-            node.value = value
-        else:
-            bin_size = str(bin(size + 1))
-            for num in bin_size[3:-1]:
-                if num == '0':
-                    node  = node.left
-                if num == '1':
-                    node = node.right
-            if bin_size[-1] == '0':
+        node.descendents += 1 
+        binary = "{0:b}".format(node.descendents)
+        if binary[1] == '0':
+            if node.left is None:
                 node.left = Node(value)
+                node.left.descendents = 1
             else:
+                Heap._insert(value, node.left)
+            if node.value > node.left.value:
+                node.value, node.left.value = node.left.value, node.value
+        elif binary[1] == '1':
+            if node.right is None:
                 node.right = Node(value)
-            if not Heap._is_heap_satisfied(node):
-                bin_size = bin_size[2:]
-                Heap._bubble_up(bin_size, node)
-
-    @staticmethod 
-    def _bubble_up(bin_size, node):
-        start = node
-        if len(bin_size) == 2:
-            if bin_size[-1] == '0':
-                if node.value > node.left.value:
-                    Heap.swap(node, node.left)
+                node.right.descendents = 1
             else:
-                if node.value > node.right.value:
-                    Heap.swap(node, node.right)
-        else:
-            stack = []
-            for num in bin_size[1:-1]:
-                if num == '0':
-                    stack.append(node.left)
-                    node = node.left
-                if num == '1':
-                    stack.append(node.right)
-                    node = node.right
-            while len(stack) > 0:
-                node = stack.pop()
-                stack.append(node)
-                if node.value > node.left.value:
-                    stack.pop()
-                    Heap.swap(node, node.left)
-                    stack.append(node)
-                elif node.right and node.value > node.right.value:
-                    stack.pop()
-                    Heap.swap(node, node.right)
-                    stack.append(node)
-                else:
-                    stack.pop()
-        if start.left and start.value > start.left.value:
-            Heap.swap(start, start.left)
-        elif start.right and start.value > start.right.value:
-            Heap.swap(start, start.right)
-
+                Heap._insert(value, node.right)
+            if node.value > node.right.value:
+                node.value, node.right.value = node.right.value, node.value
+    
     @staticmethod
     def size(self):
         if self.root is None:
@@ -209,14 +170,30 @@ class Heap(BinaryTree):
         Create a recursive staticmethod helper function,
         similar to how the insert and find functions have recursive helpers.
         '''
-        return Heap._find_smallest(self.root)
+        if self.root:
+            return Heap._find_smallest(self.root)
     
     @staticmethod
     def _find_smallest(node):
-        if node is None:
-            return
+        return node.value
+
+    @staticmethod
+    def _remove_last_elem(node):
+        binary = "{0:b}".format(node.descendents)
+        if len(binary) == 2:
+            if binary[1] == '1':
+                temp = node.right
+                node.right = None
+            elif binary[1] == '0':
+                temp = node.left
+                node.left = None
+            return temp.value
         else:
-            return node.value
+            if binary[1] == '0':
+                return Heap._remove_last_elem(node.left)
+            elif binary[1] == '1':
+                return Heap._remove_last_elem(node.right)
+        node.descendents -= 1
     
     def remove_min(self):
         '''
@@ -226,14 +203,10 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
-        if self.root is None:
-            return
-        elif self.size() == 1:
-            self.root = None
-        else:
-            Heap._remove_min(self.root, self.size())
-            Heap._bubble_down(self.root)
-    
+        self.root.value = Heap._remove_last_element(self.root)
+        if not Heap._is_heap_satisfied(self.root):
+            Heap._swap(self.root)
+
     @staticmethod
     def _remove_min(node, size):
         bin_size = str(bin(size))
