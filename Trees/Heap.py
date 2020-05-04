@@ -73,27 +73,57 @@ class Heap(BinaryTree):
             return False
 
     @staticmethod
-    def swap(n1, n2):
-        temp = n2.value
-        n2.value = n1.value
-        n1.value = temp
+    def _bubble_up(node, value):
+        ''' 
+        function that should find an added value and swap it as needed 
+        '''
+        if Heap._is_heap_satisfied(node) == True:
+            return node
+        
+        if node.left and node.left.value > node.value:
+            node.left = Heap._bubble_up(node.left, value)
+        
+        if node.right and node.right.value > node.value:
+            node.right = Heap._bubble_up(node.right, value)
+        
+        if node.left:
+            if node.left.value == value:
+                parent = node.left.value
+                left = node.value
+                node.value = parent
+                node.left.value = left
+
+        if node.right:
+            if node.right.value == value:
+                parent = node.right.value
+                right = node.value
+                node.value = parent
+                node.right.value = right
+
+        return node
 
     @staticmethod
-    def _swap(node):
+    def _bubble_down(node):
         if node.left is None and node.right is None:
             return node
-        elif node.right is None:
-            node.value, node.left.value = node.left.value, node.value
-            return node
-        else:
-            if node.left.value < node.right.value:
-                node.value, node.left.value = node.left.value, node.value
-                if not Heap._is_heap_satisfied(node.left):
-                    Heap._swap(node.left)
-            else:
-                node.value, node.right.value = node.right.value, node.value
-                if not Heap._is_heap_satisfied(node.right):
-                    Heap._swap(node.right)
+
+        if (node.right is None or node.left.value <= node.right.value) and node.left:
+            if node.left.value < node.value:
+                parent = node.left.value
+                left = node.value
+                node.value = parent
+                node.left.value = left
+            node.left = Heap._bubble_down(node.left)
+    
+        elif (node.left is None or node.right.value <= node.left.value) and node.right:
+            if node.right.value < node.value:
+                parent = node.right.value
+                right = node.value
+                node.value = parent
+                node.right.value = right
+            node.right = Heap._bubble_down(node.right)
+
+        return node
 
     def insert(self, value):
         '''
@@ -111,25 +141,27 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
-        node.descendents += 1 
-        binary = "{0:b}".format(node.descendents)
-        if binary[1] == '0':
-            if node.left is None:
-                node.left = Node(value)
-                node.left.descendents = 1
-            else:
-                Heap._insert(value, node.left)
+        if node is None:
+            return
+        
+        # finish tree
+        if node.left and node.right:
+            node.left = Heap._insert(node.left,value)
             if node.value > node.left.value:
-                node.value, node.left.value = node.left.value, node.value
-        elif binary[1] == '1':
-            if node.right is None:
-                node.right = Node(value)
-                node.right.descendents = 1
-            else:
-                Heap._insert(value, node.right)
+                return Heap._bubble_up(node, value)
+
+        elif node.right is None:
+            node.right = Node(value)
             if node.value > node.right.value:
-                node.value, node.right.value = node.right.value, node.value
-    
+                return Heap._bubble_up(node.value)
+        
+        elif node.left is None:
+            node.left = Node(value)
+            if node.value > node.left.value:
+                return Heap._bubble_up(node, value)
+
+        return node
+
     @staticmethod
     def size(self):
         if self.root is None:
@@ -178,22 +210,27 @@ class Heap(BinaryTree):
         return node.value
 
     @staticmethod
-    def _remove_last_elem(node):
-        binary = "{0:b}".format(node.descendents)
-        if len(binary) == 2:
-            if binary[1] == '1':
-                temp = node.right
-                node.right = None
-            elif binary[1] == '0':
-                temp = node.left
-                node.left = None
-            return temp.value
+    def _find_right(node):
+        if node.left is None and node.right is None:
+            return node.value
+        elif node.right:
+            return Heap._find_right(node.right)
+        elif node.left:
+            return Heap._find_right(node.left)
+
+    @staticmethod
+    def _remove(node):
+        if node is None:
+            return 
+        elif node.right:
+            node.right = Heap._remove(node.right)
+        elif node.left:
+            node.left = Heap._remove(node.left)
         else:
-            if binary[1] == '0':
-                return Heap._remove_last_elem(node.left)
-            elif binary[1] == '1':
-                return Heap._remove_last_elem(node.right)
-        node.descendents -= 1
+            if node.right is None and node.left is None:
+                return None
+
+        return node
     
     def remove_min(self):
         '''
@@ -203,6 +240,17 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
-        self.root.value = Heap._remove_last_element(self.root)
-        if not Heap._is_heap_satisfied(self.root):
-            Heap._swap(self.root)
+        if self.root is None:
+            return None
+        elif self.root.left is None and self.root.right is None:
+            self.root = None
+        else:
+            right_replace = Heap._find_right(self.root)
+            self.root = Heap._remove(self.root)
+            if right_replace == self.root.value:
+                return
+            else:
+                self.root.value = right_replace
+
+        if Heap._is_heap_satisfied(self.root) == False:
+            return Heap._bubble_down(self.root)
