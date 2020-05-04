@@ -73,7 +73,7 @@ class Heap(BinaryTree):
             return False
 
     @staticmethod
-    def _bubble_up(node):
+    def _bubble_up(node, value):
         ''' 
         function that should find an added value and swap it as needed 
         '''
@@ -161,23 +161,6 @@ class Heap(BinaryTree):
                 return Heap._bubble_up(node, value)
 
         return node
-
-    @staticmethod
-    def size(self):
-        if self.root is None:
-            return 0 
-        stack = []
-        stack.append(self.root)
-        size = 1
-        while stack:
-            node = stack.pop()
-            if node.left:
-                size += 1 
-                stack.append(node.left)
-            if node.right:
-                size += 1
-                stack.append(node.right)
-        return size
 
     def insert_list(self, xs):
         '''
