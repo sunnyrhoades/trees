@@ -133,10 +133,10 @@ class Heap(BinaryTree):
             self.root = Node(value)
             self.root.descendents = 1
         else:
-            Heap._insert(value, self.root)
+            Heap._insert(self.root, value)
 
     @staticmethod
-    def _insert(value, node):
+    def _insert(node, value):
         '''
         FIXME:
         Implement this function.
@@ -146,14 +146,14 @@ class Heap(BinaryTree):
         
         # finish tree
         if node.left and node.right:
-            node.left = Heap._insert(node.left,value)
+            node.left = Heap._insert(node.left, value)
             if node.value > node.left.value:
                 return Heap._bubble_up(node, value)
 
         elif node.right is None:
             node.right = Node(value)
             if node.value > node.right.value:
-                return Heap._bubble_up(node.value)
+                return Heap._bubble_up(node, value)
         
         elif node.left is None:
             node.left = Node(value)
