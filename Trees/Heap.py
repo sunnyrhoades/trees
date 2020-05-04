@@ -107,7 +107,7 @@ class Heap(BinaryTree):
         if node.left is None and node.right is None:
             return node
 
-        if (node.right is None or node.left.value <= node.right.value) and node.left:
+        if node.left and (node.right is None or node.left.value <= node.right.value):
             if node.left.value < node.value:
                 parent = node.left.value
                 left = node.value
@@ -115,7 +115,7 @@ class Heap(BinaryTree):
                 node.left.value = left
             node.left = Heap._bubble_down(node.left)
     
-        elif (node.left is None or node.right.value <= node.left.value) and node.right:
+        elif node.right and (node.left is None or node.right.value <= node.left.value): 
             if node.right.value < node.value:
                 parent = node.right.value
                 right = node.value
